@@ -1,15 +1,9 @@
 export let radiobarInputBinding = new Shiny.InputBinding();
 
 $.extend(radiobarInputBinding, {
-  Selector: {
-    SELF: ".yonder-radiobar[id]",
-    SELECTED: "input:checked:not(:disabled)"
+  find: (scope) => {
+    return scope.querySelectorAll(".yonder-radiobar[id]");
   },
-  Events: [
-    { type: "click" },
-    { type: "change" }
-  ],
-  find: (scope) => scope.querySelectorAll(".yonder-radiobar[id]"),
   getValue: (el) => {
     let radios = el.querySelectorAll("input:checked:not(:disabled)");
 
@@ -22,8 +16,8 @@ $.extend(radiobarInputBinding, {
   subscribe: (el, callback) => {
     let $el = $(el);
 
-    $el.on("click.yonder", e => callback());
     $el.on("change.yonder", e => callback());
+    $el.on("radiobar.select.yonder", (e) => callback());
   },
   unsubscribe: (el) => {
     $(el).off(".yonder");

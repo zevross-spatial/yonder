@@ -1283,15 +1283,6 @@
 
   var radiobarInputBinding = new Shiny.InputBinding();
   $.extend(radiobarInputBinding, {
-    Selector: {
-      SELF: ".yonder-radiobar[id]",
-      SELECTED: "input:checked:not(:disabled)"
-    },
-    Events: [{
-      type: "click"
-    }, {
-      type: "change"
-    }],
     find: function find(scope) {
       return scope.querySelectorAll(".yonder-radiobar[id]");
     },
@@ -1308,10 +1299,10 @@
     },
     subscribe: function subscribe(el, callback) {
       var $el = $(el);
-      $el.on("click.yonder", function (e) {
+      $el.on("change.yonder", function (e) {
         return callback();
       });
-      $el.on("change.yonder", function (e) {
+      $el.on("radiobar.select.yonder", function (e) {
         return callback();
       });
     },
