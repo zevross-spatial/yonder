@@ -5,6 +5,7 @@ $.extend(chipInputBinding, {
   selectorToggle: "input[data-toggle='dropdown']",
 
   find: (scope) => scope.querySelectorAll(".yonder-chip[id]"),
+
   initialize: (el) => {
     let $el = $(el);
     let $toggle = $(el.querySelector(chipInputBinding.selectorToggle));
@@ -49,23 +50,32 @@ $.extend(chipInputBinding, {
       chipInputBinding._disable(el);
     }
   },
+
   getValue: (el) => {
     let selected = el.querySelectorAll(".active");
 
     if (selected.length === 0) {
+      console.log("getValue returning: null");
       return null;
     }
 
-    return Array.prototype.map.call(selected, s => s.value);
+    const result = Array.prototype.map.call(selected, s => s.value);
+    console.log("getValue returning:", result);
+    return result;
   },
+
   subscribe: (el, callback) => {
     let $el = $(el);
 
     $el.on("click.yonder", ".dropdown-item,.chip", (e) => callback());
     $el.on("chip.select.yonder", (e) => callback());
   },
+
   unsubscribe: (el) => $(el).off(".yonder"),
+
   receiveMessage: (el, msg) => {
+    console.log("receiveMessage called:", msg);
+
     let $el = $(el);
 
     if (msg.items && msg.chips) {
@@ -130,19 +140,21 @@ $.extend(chipInputBinding, {
     }
   },
 
-
   _visible: (el) => {
     return el.querySelectorAll(":not(.selected),:not(.filtered)");
   },
+
   _selected: (el) => {
     return el.querySelectorAll(".selected");
   },
+
   _items: (el, value) => {
     return Array.prototype.filter.call(
       el.querySelectorAll(".dropdown-item"),
       chip => chip.value === value
     );
   },
+
   _chips: (el, value) => {
     return Array.prototype.filter.call(
       el.querySelectorAll(".chip"),
@@ -155,11 +167,13 @@ $.extend(chipInputBinding, {
     input.removeAttribute("disabled");
     input.classList.remove("disabled");
   },
+
   _disable: (el) => {
     let input = el.querySelector("input");
     input.setAttribute("disabled", "");
     input.classList.add("disabled");
   },
+
   _filter: (el, value) => {
     value = value.toLowerCase();
 
@@ -173,7 +187,10 @@ $.extend(chipInputBinding, {
       }
     });
   },
+
   _add: (el, value) => {
+    console.log("_add called with:", value);
+
     let $toggle = $(el.querySelector(chipInputBinding.selectorToggle));
     let sort = el.getAttribute("data-sort");
 
@@ -182,21 +199,14 @@ $.extend(chipInputBinding, {
     });
 
     let chips = el.querySelector(".chips");
+
     chipInputBinding._chips(el, value).forEach(chip => {
       if (sort === "stack") {
         chips.insertBefore(chips.removeChild(chip), chips.firstChild);
       } else if (sort === "queue") {
           // old queue sorting
           // chips.appendChild(chips.removeChild(chip));
-          
-          // Get the parent and the chip
-          let parent = chip.parentNode;
-          if (parent === chips) {
-            // Remove from current position
-            parent.removeChild(chip);
-            // Add to end
-            parent.appendChild(chip);
-          }
+          chips.insertBefore(chips.removeChild(chip), null);
       }
 
       chip.classList.add("active");
@@ -214,7 +224,11 @@ $.extend(chipInputBinding, {
       $toggle.dropdown("hide");
       chipInputBinding._disable(el);
     }
+
+    console.log("_add completed, DOM order:", Array.from(chips.children).filter(c => c.classList.contains("active")).map(c => c.value));
+
   },
+
   _remove: (el, value) => {
     let max = +el.getAttribute("data-max");
 

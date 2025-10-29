@@ -399,12 +399,15 @@
       var selected = el.querySelectorAll(".active");
 
       if (selected.length === 0) {
+        console.log("getValue returning: null");
         return null;
       }
 
-      return Array.prototype.map.call(selected, function (s) {
+      var result = Array.prototype.map.call(selected, function (s) {
         return s.value;
       });
+      console.log("getValue returning:", result);
+      return result;
     },
     subscribe: function subscribe(el, callback) {
       var $el = $(el);
@@ -419,6 +422,7 @@
       return $(el).off(".yonder");
     },
     receiveMessage: function receiveMessage(el, msg) {
+      console.log("receiveMessage called:", msg);
       var $el = $(el);
 
       if (msg.items && msg.chips) {
@@ -521,6 +525,7 @@
       });
     },
     _add: function _add(el, value) {
+      console.log("_add called with:", value);
       var $toggle = $(el.querySelector(chipInputBinding.selectorToggle));
       var sort = el.getAttribute("data-sort");
 
@@ -536,15 +541,7 @@
         } else if (sort === "queue") {
           // old queue sorting
           // chips.appendChild(chips.removeChild(chip));
-          // Get the parent and the chip
-          var parent = chip.parentNode;
-
-          if (parent === chips) {
-            // Remove from current position
-            parent.removeChild(chip); // Add to end
-
-            parent.appendChild(chip);
-          }
+          chips.insertBefore(chips.removeChild(chip), null);
         }
 
         chip.classList.add("active");
@@ -563,6 +560,12 @@
 
         chipInputBinding._disable(el);
       }
+
+      console.log("_add completed, DOM order:", Array.from(chips.children).filter(function (c) {
+        return c.classList.contains("active");
+      }).map(function (c) {
+        return c.value;
+      }));
     },
     _remove: function _remove(el, value) {
       var max = +el.getAttribute("data-max");
