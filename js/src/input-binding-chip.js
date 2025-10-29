@@ -187,7 +187,7 @@ $.extend(chipInputBinding, {
         chips.insertBefore(chips.removeChild(chip), chips.firstChild);
       } else if (sort === "queue") {
         // chips.appendChild(chips.removeChild(chip));
-        chips.insertAfter(chips.removeChild(chip), chips.lastChild);
+        chips.appendChild(chip);
       }
 
       chip.classList.add("active");
