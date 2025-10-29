@@ -536,17 +536,14 @@
         } else if (sort === "queue") {
           // old queue sorting
           // chips.appendChild(chips.removeChild(chip));
-          // new queue sorting
-          var activeChips = chips.querySelectorAll(".chip.active");
+          // Get the parent and the chip
+          var parent = chip.parentNode;
 
-          if (activeChips.length === 0) {
-            // No active chips yet, just move to the beginning
-            chips.insertBefore(chips.removeChild(chip), chips.firstChild);
-          } else {
-            // Get the last active chip
-            var lastActive = activeChips[activeChips.length - 1]; // Insert this chip right after the last active one
+          if (parent === chips) {
+            // Remove from current position
+            parent.removeChild(chip); // Add to end
 
-            chips.insertBefore(chips.removeChild(chip), lastActive.nextSibling);
+            parent.appendChild(chip);
           }
         }
 
