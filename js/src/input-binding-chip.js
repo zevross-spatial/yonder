@@ -186,8 +186,21 @@ $.extend(chipInputBinding, {
       if (sort === "stack") {
         chips.insertBefore(chips.removeChild(chip), chips.firstChild);
       } else if (sort === "queue") {
-        // chips.appendChild(chips.removeChild(chip));
-        chips.insertBefore(chips.removeChild(chip), chips.firstChild);
+          // old queue sorting
+          // chips.appendChild(chips.removeChild(chip));
+
+          // new queue sorting
+          let activeChips = chips.querySelectorAll(".chip.active");
+  
+          if (activeChips.length === 0) {
+            // No active chips yet, just move to the beginning
+            chips.insertBefore(chips.removeChild(chip), chips.firstChild);
+          } else {
+            // Get the last active chip
+            let lastActive = activeChips[activeChips.length - 1];
+            // Insert this chip right after the last active one
+            chips.insertBefore(chips.removeChild(chip), lastActive.nextSibling);
+          }
       }
 
       chip.classList.add("active");
