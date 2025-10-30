@@ -437,12 +437,9 @@
           });
         } else {
           // msg.selected.reverse();
-          // Get the sort type from the element's data attribute
-          var sort = el.getAttribute("data-sort") || "stack"; // Only reverse if using stack sorting
-
-          if (sort === "stack") {
-            msg.selected.reverse();
-          }
+          var selectedArray = typeof msg.selected === "string" ? msg.selected.split("|").filter(function (v) {
+            return v.length > 0;
+          }) : msg.selected;
 
           chipInputBinding._selected(el).forEach(function (item) {
             chipInputBinding._remove(el, item.value);

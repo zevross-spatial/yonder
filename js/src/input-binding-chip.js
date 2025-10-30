@@ -90,13 +90,9 @@ $.extend(chipInputBinding, {
         });
       } else {
         // msg.selected.reverse();
-        // Get the sort type from the element's data attribute
-        let sort = el.getAttribute("data-sort") || "stack";
-        
-        // Only reverse if using stack sorting
-        if (sort === "stack") {
-          msg.selected.reverse();
-        }
+        let selectedArray = typeof msg.selected === "string" 
+          ? msg.selected.split("|").filter(v => v.length > 0)
+          : msg.selected;
 
         chipInputBinding._selected(el).forEach(item => {
           chipInputBinding._remove(el, item.value);
