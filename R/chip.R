@@ -142,10 +142,35 @@ chipInput <- function(id, choices = NULL, values = choices, selected = NULL,
 
 #' @rdname chipInput
 #' @export
+# updateChipInput <- function(id, choices = NULL, values = choices,
+#                             selected = NULL, max = NULL,
+#                             enable = NULL, disable = NULL,
+#                             session = getDefaultReactiveDomain()) {
+#   assert_id()
+#   assert_choices()
+#   assert_session()
+
+#   chips <- map_chipchips(choices, values, selected)
+#   items <- map_chipitems(choices, values, selected)
+
+#   chips <- coerce_content(chips)
+#   items <- coerce_content(items)
+#   selected <- coerce_selected(selected)
+#   enable <- coerce_enable(enable)
+#   disable <- coerce_disable(disable)
+
+#   session$sendInputMessage(id, list(
+#     chips = chips,
+#     items = items,
+#     selected = selected,
+#     enable = enable,
+#     disable = disable
+#   ))
+# }
 updateChipInput <- function(id, choices = NULL, values = choices,
-                            selected = NULL, max = NULL,
-                            enable = NULL, disable = NULL,
-                            session = getDefaultReactiveDomain()) {
+                        selected = NULL, max = NULL,
+                        enable = NULL, disable = NULL,
+                        session = getDefaultReactiveDomain()) {
   assert_id()
   assert_choices()
   assert_session()
@@ -156,16 +181,19 @@ updateChipInput <- function(id, choices = NULL, values = choices,
   chips <- coerce_content(chips)
   items <- coerce_content(items)
   selected <- coerce_selected(selected)
+  selected_string <- paste(selected, collapse = "|")  # e.g., "sba|asfr1|zero"
   enable <- coerce_enable(enable)
   disable <- coerce_disable(disable)
 
-  session$sendInputMessage(id, list(
+  msg <- list(
     chips = chips,
-    items = items,
-    selected = selected,
+    items = items, 
+    selected = selected_string,
     enable = enable,
     disable = disable
-  ))
+  )
+
+  session$sendInputMessage(id, msg)
 }
 
 map_chipitems <- function(choices, values, selected) {
