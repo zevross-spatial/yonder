@@ -98,7 +98,7 @@ $.extend(chipInputBinding, {
           chipInputBinding._remove(el, item.value);
         });
 
-        msg.selected.forEach(value => {
+        selectedArray.forEach(value => {
           chipInputBinding._add(el, value);
         });
       }

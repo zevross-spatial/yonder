@@ -445,7 +445,7 @@
             chipInputBinding._remove(el, item.value);
           });
 
-          msg.selected.forEach(function (value) {
+          selectedArray.forEach(function (value) {
             chipInputBinding._add(el, value);
           });
         }
